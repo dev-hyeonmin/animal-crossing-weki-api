@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
+const axios = require('axios');
 
-let VillagerList = {};
+let VillagerList = [];
 
 async function crawl() {
     console.log("start");
@@ -29,16 +30,16 @@ async function crawl() {
     const content = await page.content();
     const $ = cheerio.load(content);
     const lists = $("#show_product .media");
-    lists.each((index, list) => {
-        VillagerList[index] = {
+    lists.each(async (index, list) => {        
+        VillagerList.push({
             image: $(list).find(".media-left img").attr("src"),
             species: $(list).find(".media-left > h4 > a").text(),
             name: $(list).find(".media-body > .list-group-item-text:nth-child(1) > h4 > span > a").text(),
             personality: $(list).find(".media-body > .list-group-item-text:nth-child(3) > h4 > span > a > span > span").text(),
             gender: $(list).find(".media-body > .list-group-item-text:nth-child(4) > h4 > span > span > span").text() == '♂' ? "여" : "남",
             birth: $(list).find(".media-body > .list-group-item-text:nth-child(5) > h4 > span > a").text(),
-            speack: $(list).find(".media-body > .list-group-item-text:nth-child(6) > h4 > span > span").text(),
-            speackType: $(list).find(".media-body > .list-group-item-text:nth-child(7) > h4 > span > span").text(),
+            speak: $(list).find(".media-body > .list-group-item-text:nth-child(6) > h4 > span > span").text(),
+            speakType: $(list).find(".media-body > .list-group-item-text:nth-child(7) > h4 > span > span").text(),
             hobby: $(list).find(".media-body > .list-group-item-text:nth-child(9) > h4 > span > span").text(),
             music: $(list).find(".media-body > .list-group-item-text:nth-child(11) > h4 > span > span").text(),
             style: $(list).find(".media-body > .list-group-item-text:nth-child(14) > h4 > span > span").text(),
@@ -46,10 +47,42 @@ async function crawl() {
             color: $(list).find(".media-body > .list-group-item-text:nth-child(16) > h4 > span > span").text(),
             color2: $(list).find(".media-body > .list-group-item-text:nth-child(17) > h4 > span > span").text(),
             favoriteTalk: $(list).find(".media-body > .list-group-item-text:nth-child(20) > h4 > span > span").text(),
-        }
-        console.log(VillagerList[index]);
-    });
+        });        
+    });  
 
+    let currentPage = 0;
+    let index = 0;
+    const pageIndex = 20;
+    const totalPage = Math.floor(VillagerList.length / pageIndex) + 1;    
+
+    console.log(VillagerList.length, totalPage);
+    for (var i = 0; i < totalPage; i++){
+        await Promise.all(VillagerList.slice(currentPage * 20, currentPage * 20 + 20).map(async (villager) => {
+            console.log(`${index} Inserted villager :: ${villager.name}`);
+            index++;
+
+            await axios.post('http://localhost:4000/graphql', {
+                query: `
+                    mutation createVillagers($createVillagersInput: CreateVillagersInput!) {
+                        createVillagers(input: $createVillagersInput){        
+                            ok
+                            error
+                        }
+                    }
+                `,
+                variables: {
+                    createVillagersInput: villager
+                }
+            }).then((res) => {
+                // console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }));
+
+        currentPage++;
+    }
+    
     //닫기
     await browser.close();
 };

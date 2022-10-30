@@ -3,8 +3,6 @@
 # ------------------------------------------------------
 
 type User {
-  id: Float!
-  updateAt: DateTime!
   name: String!
   email: String!
   password: String!
@@ -39,6 +37,11 @@ type VerifyEmailOutput {
   ok: Boolean!
 }
 
+type CreateVillagersOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   me: User!
 }
@@ -48,6 +51,7 @@ type Mutation {
   editProfile(input: EditProfileInput!): EditProfileOutput!
   login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
+  createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
 }
 
 input CreateAccountInput {
@@ -70,4 +74,22 @@ input LoginInput {
 
 input VerifyEmailInput {
   code: String!
+}
+
+input CreateVillagersInput {
+  image: String
+  species: String
+  name: String!
+  personality: String
+  gender: String
+  birth: String
+  speak: String
+  speakType: String
+  hobby: String
+  music: String
+  style: String
+  style2: String
+  color: String
+  color2: String
+  favoriteTalk: String
 }

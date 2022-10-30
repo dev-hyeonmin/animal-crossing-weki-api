@@ -15,6 +15,8 @@ import { MailModule } from './mail/mail.module';
 import { CommonModule } from './common/common.module';
 import { Context } from 'apollo-server-core';
 import { UploadsModule } from './uploads/uploads.module';
+import { VillagersModule } from './villagers/villagers.module';
+import { Villager } from './villagers/entities/villager';
 
 @Module({
   imports: [
@@ -49,7 +51,7 @@ import { UploadsModule } from './uploads/uploads.module';
           database: process.env.DB_DATABASE,
         }),
       synchronize: true,
-      entities: [User, Verification]
+      entities: [User, Verification, Villager]
     }),
       GraphQLModule.forRoot<ApolloDriverConfig>({
         driver: ApolloDriver,
@@ -89,6 +91,7 @@ import { UploadsModule } from './uploads/uploads.module';
     CommonModule,
     AuthModule,
     UploadsModule,
+    VillagersModule,
   ],
   controllers: [],
   providers: [],

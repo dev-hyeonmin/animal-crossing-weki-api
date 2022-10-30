@@ -6,7 +6,6 @@ import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } fr
 export class CoreEntity {
     @PrimaryGeneratedColumn()
     @Column(type => Number)
-    @Field(type => Number) 
     id: number;
 
     @CreateDateColumn()
@@ -15,6 +14,5 @@ export class CoreEntity {
 
     @UpdateDateColumn()
     @Column(type => Date)
-    @Field(type => Date)
     updateAt: Date;
 }
