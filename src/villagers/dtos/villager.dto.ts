@@ -3,6 +3,15 @@ import { CoreOutput } from "src/common/dtos/output.dto";
 import { Villager } from "../entities/villager";
 
 @InputType()
+export class VillagersInput {}
+
+@ObjectType()
+export class VillagersOutput extends CoreOutput{
+    @Field(types => [Villager], { nullable: true })
+    villagers?: Villager[];
+}
+
+@InputType()
 export class CreateVillagersInput extends PickType(Villager, [
     'image',
     'species',

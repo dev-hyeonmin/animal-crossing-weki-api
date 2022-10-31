@@ -37,6 +37,30 @@ type VerifyEmailOutput {
   ok: Boolean!
 }
 
+type Villager {
+  image: String
+  species: String
+  name: String!
+  personality: String
+  gender: String
+  birth: String
+  speak: String
+  speakType: String
+  hobby: String
+  music: String
+  style: String
+  style2: String
+  color: String
+  color2: String
+  favoriteTalk: String
+}
+
+type VillagersOutput {
+  error: String
+  ok: Boolean!
+  villagers: [Villager!]
+}
+
 type CreateVillagersOutput {
   error: String
   ok: Boolean!
@@ -44,6 +68,7 @@ type CreateVillagersOutput {
 
 type Query {
   me: User!
+  villagers: VillagersOutput!
 }
 
 type Mutation {
