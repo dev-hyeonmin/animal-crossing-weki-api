@@ -1,5 +1,10 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { CreateVillagersInput, CreateVillagersOutput, VillagersOutput } from "./dtos/villager.dto";
+import { AuthUser } from "src/auth/auth-user.decorator";
+import { AuthGuard } from "src/auth/auth.guard";
+import { User } from "src/users/entities/user.entity";
+import { CreateVillagerCommentInput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput } from "./dtos/villager-comment.dto";
+import { CreateVillagersInput, CreateVillagersOutput, VillagersInput, VillagersOutput } from "./dtos/villager.dto";
 import { VillagersService } from "./villagers.service";
 
 @Resolver()
@@ -9,8 +14,10 @@ export class VillagersResolver {
     ) { }
 
     @Query(returns => VillagersOutput)
-    async villagers(): Promise<CreateVillagersOutput> {
-        return this.villagersService.villagers();
+    async villagers(
+        @Args('input') villagersInput: VillagersInput
+    ): Promise<CreateVillagersOutput> {
+        return this.villagersService.villagers(villagersInput);
     }
 
     @Mutation(returns => CreateVillagersOutput)
@@ -18,5 +25,23 @@ export class VillagersResolver {
         @Args('input') createVillagersInput: CreateVillagersInput
     ): Promise<CreateVillagersOutput> {
         return this.villagersService.createVillagers(createVillagersInput);
+    }
+
+    @Mutation(returns => CreateVillagersOutput)
+    @UseGuards(AuthGuard)
+    async createVillagerCommentInput(
+        @AuthUser() authUser: User,
+        @Args('input') createVillagerCommentInput: CreateVillagerCommentInput
+    ): Promise<CreateVillagersOutput> {
+        return this.villagersService.createVillagerComment(authUser, createVillagerCommentInput);
+    }
+
+    @Mutation(returns => DeleteVillagerCommentOutput)
+    @UseGuards(AuthGuard)
+    async deleteVillagerCommentInput(
+        @AuthUser() authUser: User,
+        @Args('input') deleteVillagerCommentInput: DeleteVillagerCommentInput
+    ): Promise<DeleteVillagerCommentOutput> {
+        return this.villagersService.deleteVillagerComment(authUser.id, deleteVillagerCommentInput);
     }
 }

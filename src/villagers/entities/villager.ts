@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreEntity } from "src/common/core.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
+import { VillagerComment } from "./villager-comment";
 
 @InputType("VillagerInputType", { isAbstract: true })
 @ObjectType()
@@ -65,4 +66,11 @@ export class Villager extends CoreEntity {
     @Column({ nullable: true })
     @Field(type => String, { nullable: true })
     favoriteTalk?: string;
+
+    @OneToMany(
+        () => VillagerComment,
+        (comment) => comment.villager,
+        { onDelete: "CASCADE", nullable: true },
+    )
+    comments?: VillagerComment[];
 }

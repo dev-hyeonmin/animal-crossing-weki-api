@@ -3,6 +3,7 @@ import { InternalServerErrorException } from "@nestjs/common";
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreEntity } from "src/common/core.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, UpdateDateColumn } from "typeorm";
+import { VillagerComment } from "src/villagers/entities/villager-comment";
 
 @InputType("UserInputType", { isAbstract: true })
 @ObjectType() // 자동으로 스키마를 빌드하기 위한 GraphQL의 decorator
@@ -44,4 +45,11 @@ export class User extends CoreEntity {
             }
         }
     }
+
+    @OneToMany(
+        () => VillagerComment,
+        (comment) => comment.user,
+        { onDelete: "CASCADE", nullable: true },
+    )
+    comments?: VillagerComment[];
 }

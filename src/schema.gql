@@ -2,7 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Villager {
+  id: Float!
+  image: String
+  species: String
+  name: String!
+  personality: String
+  gender: String
+  birth: String
+  speak: String
+  speakType: String
+  hobby: String
+  music: String
+  style: String
+  style2: String
+  color: String
+  color2: String
+  favoriteTalk: String
+}
+
 type User {
+  id: Float!
   name: String!
   email: String!
   password: String!
@@ -37,22 +57,9 @@ type VerifyEmailOutput {
   ok: Boolean!
 }
 
-type Villager {
-  image: String
-  species: String
-  name: String!
-  personality: String
-  gender: String
-  birth: String
-  speak: String
-  speakType: String
-  hobby: String
-  music: String
-  style: String
-  style2: String
-  color: String
-  color2: String
-  favoriteTalk: String
+type DeleteVillagerCommentOutput {
+  error: String
+  ok: Boolean!
 }
 
 type VillagersOutput {
@@ -68,7 +75,13 @@ type CreateVillagersOutput {
 
 type Query {
   me: User!
-  villagers: VillagersOutput!
+  villagers(input: VillagersInput!): VillagersOutput!
+}
+
+input VillagersInput {
+  species: String
+  name: String
+  personality: String
 }
 
 type Mutation {
@@ -77,6 +90,8 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
+  createVillagerCommentInput(input: CreateVillagerCommentInput!): CreateVillagersOutput!
+  deleteVillagerCommentInput(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
 }
 
 input CreateAccountInput {
@@ -117,4 +132,13 @@ input CreateVillagersInput {
   color: String
   color2: String
   favoriteTalk: String
+}
+
+input CreateVillagerCommentInput {
+  content: String!
+  villagerId: Float!
+}
+
+input DeleteVillagerCommentInput {
+  id: Float!
 }

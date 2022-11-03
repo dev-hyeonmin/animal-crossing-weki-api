@@ -17,6 +17,7 @@ import { Context } from 'apollo-server-core';
 import { UploadsModule } from './uploads/uploads.module';
 import { VillagersModule } from './villagers/villagers.module';
 import { Villager } from './villagers/entities/villager';
+import { VillagerComment } from './villagers/entities/villager-comment';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { Villager } from './villagers/entities/villager';
           database: process.env.DB_DATABASE,
         }),
       synchronize: true,
-      entities: [User, Verification, Villager]
+      entities: [User, Verification, Villager, VillagerComment]
     }),
       GraphQLModule.forRoot<ApolloDriverConfig>({
         driver: ApolloDriver,

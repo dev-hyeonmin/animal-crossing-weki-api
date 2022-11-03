@@ -1,9 +1,13 @@
-import { Field, InputType, ObjectType, PickType } from "@nestjs/graphql";
+import { Field, InputType, ObjectType, PartialType, PickType } from "@nestjs/graphql";
 import { CoreOutput } from "src/common/dtos/output.dto";
 import { Villager } from "../entities/villager";
 
 @InputType()
-export class VillagersInput {}
+export class VillagersInput extends PickType(PartialType(Villager), [
+    'species',
+    'name',
+    'personality'
+]) {}
 
 @ObjectType()
 export class VillagersOutput extends CoreOutput{
