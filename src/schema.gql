@@ -66,6 +66,15 @@ type VillagersOutput {
   error: String
   ok: Boolean!
   villagers: [Villager!]
+  species: [String!]
+  personalities: [String!]
+}
+
+type VillagersFilterOutput {
+  error: String
+  ok: Boolean!
+  species: [String!]
+  personalities: [String!]
 }
 
 type CreateVillagersOutput {
@@ -76,6 +85,7 @@ type CreateVillagersOutput {
 type Query {
   me: User!
   villagers(input: VillagersInput!): VillagersOutput!
+  villagersFilter: VillagersFilterOutput!
 }
 
 input VillagersInput {
@@ -90,8 +100,8 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
-  createVillagerCommentInput(input: CreateVillagerCommentInput!): CreateVillagersOutput!
-  deleteVillagerCommentInput(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
+  createVillagerComment(input: CreateVillagerCommentInput!): CreateVillagersOutput!
+  deleteVillagerComment(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
 }
 
 input CreateAccountInput {

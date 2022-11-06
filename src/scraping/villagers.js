@@ -36,7 +36,7 @@ async function crawl() {
             species: $(list).find(".media-left > h4 > a").text(),
             name: $(list).find(".media-body > .list-group-item-text:nth-child(1) > h4 > span > a").text(),
             personality: $(list).find(".media-body > .list-group-item-text:nth-child(3) > h4 > span > a > span > span").text(),
-            gender: $(list).find(".media-body > .list-group-item-text:nth-child(4) > h4 > span > span > span").text() == '♂' ? "여" : "남",
+            gender: $(list).find(".media-body > .list-group-item-text:nth-child(4) > h4 > span > span > span").text() == '♂' ? "남" : "여",
             birth: $(list).find(".media-body > .list-group-item-text:nth-child(5) > h4 > span > a").text(),
             speak: $(list).find(".media-body > .list-group-item-text:nth-child(6) > h4 > span > span").text(),
             speakType: $(list).find(".media-body > .list-group-item-text:nth-child(7) > h4 > span > span").text(),

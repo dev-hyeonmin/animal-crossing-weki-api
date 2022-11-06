@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "aws-sdk/clients/budgets";
 import { Like, Repository } from "typeorm";
 import { CreateVillagerCommentInput, CreateVillagerCommentOutput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput } from "./dtos/villager-comment.dto";
-import { CreateVillagersInput, CreateVillagersOutput, VillagersInput, VillagersOutput } from "./dtos/villager.dto";
+import { CreateVillagersInput, CreateVillagersOutput, VillagersFilterOutput, VillagersInput, VillagersOutput } from "./dtos/villager.dto";
 import { Villager } from "./entities/villager";
 import { VillagerComment } from "./entities/villager-comment";
 
@@ -30,10 +30,49 @@ export class VillagersService {
             if (personality) {
                 whereSql = {...{personality}};
             }
-            const villagers = await this.villager.find({where: whereSql});
 
-            return { ok: true, villagers };
+            const villagers = await this.villager.find({ where: whereSql });
+
+            return {
+                ok: true,
+                villagers,
+            };
         } catch (error) {
+            console.log(error);
+            return { ok: false, error };
+        }
+    }
+
+    async villagersFilter(): Promise<VillagersFilterOutput> {
+        try {
+            const species = [];
+            const personalities = [];
+
+            const speciesData = await this.villager.createQueryBuilder("villager")
+                .select('villager.species')
+                .groupBy("villager.species")
+                .getRawMany();
+            
+            const personalitiesData = await this.villager.createQueryBuilder("villager")
+                .select('villager.personality')
+                .groupBy("villager.personality")
+                .getRawMany();
+            
+            speciesData.map((item) => {
+                species.push(item.villager_species);
+            });
+
+            personalitiesData.map((item) => {
+                personalities.push(item.villager_personality);
+            });
+
+            return {
+                ok: true,
+                species,
+                personalities
+            };
+        } catch (error) {
+            console.log(error);
             return { ok: false, error };
         }
     }
