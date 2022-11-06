@@ -20,17 +20,18 @@ export class VillagersService {
         try {
             let whereSql = {};
             if (name) {
-                whereSql = {...{name}};
+                whereSql = {...whereSql, ...{name: Like(`%${name}%`)}};
             }
 
             if (species) {
-                whereSql = {...{species}};
+                whereSql = {...whereSql, ...{species: species}};
             }
 
             if (personality) {
-                whereSql = {...{personality}};
+                whereSql = {...whereSql, ...{personality: personality}};
             }
-
+            console.log("---------------");
+            console.log(whereSql);
             const villagers = await this.villager.find({ where: whereSql });
 
             return {
