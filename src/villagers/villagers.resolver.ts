@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { AuthUser } from "src/auth/auth-user.decorator";
 import { AuthGuard } from "src/auth/auth.guard";
 import { User } from "src/users/entities/user.entity";
-import { CreateVillagerCommentInput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput } from "./dtos/villager-comment.dto";
+import { CreateVillagerCommentInput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput, VillagerCommentsInput, VillagerCommentsOutput } from "./dtos/villager-comment.dto";
 import { CreateVillagersInput, CreateVillagersOutput, VillagersFilterOutput, VillagersInput, VillagersOutput } from "./dtos/villager.dto";
 import { VillagersService } from "./villagers.service";
 
@@ -25,12 +25,16 @@ export class VillagersResolver {
         return this.villagersService.villagersFilter();
     }
 
-
     @Mutation(returns => CreateVillagersOutput)
     async createVillagers(
         @Args('input') createVillagersInput: CreateVillagersInput
     ): Promise<CreateVillagersOutput> {
         return this.villagersService.createVillagers(createVillagersInput);
+    }
+
+    @Query(returns => VillagerCommentsOutput)
+    async villagersComments(@Args('input')villagerCommentsInput :VillagerCommentsInput): Promise<VillagerCommentsOutput> {
+        return this.villagersService.villagerComments(villagerCommentsInput);
     }
 
     @Mutation(returns => CreateVillagersOutput)

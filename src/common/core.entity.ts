@@ -10,6 +10,7 @@ export class CoreEntity {
     id: number;
 
     @CreateDateColumn()
+    @Field(type => Date)
     @Column(type => Date)
     createAt: Date;
 

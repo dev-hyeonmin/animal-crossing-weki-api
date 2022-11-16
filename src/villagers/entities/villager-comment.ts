@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreEntity } from "src/common/core.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, RelationId } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, RelationId } from "typeorm";
 import { Villager } from "./villager";
 
 @InputType("VillagerCommentInputType", { isAbstract: true })
@@ -12,15 +12,16 @@ export class VillagerComment extends CoreEntity {
     @Field(type => String)
     content: string;
 
-    @RelationId((villagerComment: VillagerComment) => villagerComment.villager)
+    @Column()
     @Field(type => Number)
+    @RelationId((villagerComment: VillagerComment) => villagerComment.villager)
     villagerId: number;
 
     @ManyToOne(
         () => Villager,
         (villager) => villager.comments,
         { onDelete: "CASCADE", nullable: false },
-    )
+    )      
     villager: Villager;
 
     @ManyToOne(
@@ -28,5 +29,6 @@ export class VillagerComment extends CoreEntity {
         (user) => user.comments,
         { onDelete: "CASCADE", nullable: false },
     )
+    @Field(type => User, { nullable: true })
     user: User;
 }

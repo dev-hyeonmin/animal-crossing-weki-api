@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "aws-sdk/clients/budgets";
 import { Like, Repository } from "typeorm";
-import { CreateVillagerCommentInput, CreateVillagerCommentOutput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput } from "./dtos/villager-comment.dto";
+import { CreateVillagerCommentInput, CreateVillagerCommentOutput, DeleteVillagerCommentInput, DeleteVillagerCommentOutput, VillagerCommentsInput, VillagerCommentsOutput } from "./dtos/villager-comment.dto";
 import { CreateVillagersInput, CreateVillagersOutput, VillagersFilterOutput, VillagersInput, VillagersOutput } from "./dtos/villager.dto";
 import { Villager } from "./entities/villager";
 import { VillagerComment } from "./entities/villager-comment";
@@ -30,8 +30,7 @@ export class VillagersService {
             if (personality) {
                 whereSql = {...whereSql, ...{personality: personality}};
             }
-            console.log("---------------");
-            console.log(whereSql);
+
             const villagers = await this.villager.find({ where: whereSql });
 
             return {
@@ -86,6 +85,30 @@ export class VillagersService {
             await this.villager.save(this.villager.create(villagerInput));
 
             return { ok: true };
+        } catch (error) {
+            return { ok: false, error };
+        }
+    }
+    
+    async villagerComments({ villagerId, page }: VillagerCommentsInput): Promise<VillagerCommentsOutput> {
+        try {
+            const count = 20;
+            const villager = await this.villager.findOneBy({ id: villagerId });
+
+            if (!villager) {
+                return { ok: false, error: "Villager Not Found." };
+            }
+            
+            const comments = await this.villagerComment.find({
+                relations: ['user'],
+                where: {
+                    villagerId
+                },
+                skip: page * count,
+                take: count
+            });
+
+            return { ok: true, comments };
         } catch (error) {
             return { ok: false, error };
         }

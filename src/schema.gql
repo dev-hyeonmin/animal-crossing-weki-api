@@ -4,6 +4,7 @@
 
 type Villager {
   id: Float!
+  createAt: DateTime!
   image: String
   species: String
   name: String!
@@ -21,20 +22,34 @@ type Villager {
   favoriteTalk: String
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type VillagerComment {
+  id: Float!
+  createAt: DateTime!
+  content: String!
+  villagerId: Float!
+  user: User
+}
+
+type Fish {
+  name: String!
+}
+
 type User {
   id: Float!
+  createAt: DateTime!
   name: String!
   email: String!
   password: String!
   userImage: String
   verified: Boolean!
   lastLogin: DateTime!
+  fishes: [Fish!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type CreateAccountOutput {
   error: String
@@ -55,6 +70,12 @@ type EditProfileOutput {
 type VerifyEmailOutput {
   error: String
   ok: Boolean!
+}
+
+type VillagerCommentsOutput {
+  error: String
+  ok: Boolean!
+  comments: [VillagerComment!]
 }
 
 type DeleteVillagerCommentOutput {
@@ -82,16 +103,39 @@ type CreateVillagersOutput {
   ok: Boolean!
 }
 
+type UserFishOutput {
+  error: String
+  ok: Boolean!
+  fishes: [Fish!]
+}
+
+type CreateFishOutput {
+  error: String
+  ok: Boolean!
+}
+
+type DeleteFishOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   me: User!
   villagers(input: VillagersInput!): VillagersOutput!
   villagersFilter: VillagersFilterOutput!
+  villagersComments(input: VillagerCommentsInput!): VillagerCommentsOutput!
+  userFishes: UserFishOutput!
 }
 
 input VillagersInput {
   species: String
   name: String
   personality: String
+}
+
+input VillagerCommentsInput {
+  villagerId: Float!
+  page: Float!
 }
 
 type Mutation {
@@ -102,6 +146,8 @@ type Mutation {
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
   createVillagerComment(input: CreateVillagerCommentInput!): CreateVillagersOutput!
   deleteVillagerComment(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
+  createFishRelation(input: CreateFishInput!): CreateFishOutput!
+  deleteFishRelation(input: DeleteFishInput!): DeleteFishOutput!
 }
 
 input CreateAccountInput {
@@ -151,4 +197,12 @@ input CreateVillagerCommentInput {
 
 input DeleteVillagerCommentInput {
   id: Float!
+}
+
+input CreateFishInput {
+  name: String!
+}
+
+input DeleteFishInput {
+  name: String!
 }
