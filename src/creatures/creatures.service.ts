@@ -2,48 +2,48 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
-import { CreateFishInput, CreateFishOutput, DeleteFishInput, DeleteFishOutput, UserFishOutput } from "./dtos/fish.dto";
-import { Fish } from "./entities/fish.entity";
+import { CreateCreatureInput, CreateCreatureOutput, DeleteCreatureInput, DeleteCreatureOutput, UserCreatureOutput } from "./dtos/creature.dto";
+import { Creature } from "./entities/creature.entity";
 
 @Injectable()
-export class FishService {
+export class CreatureService {
     constructor(
-        @InjectRepository(Fish)
-        private readonly fishes: Repository<Fish>,
+        @InjectRepository(Creature)
+        private readonly creatures: Repository<Creature>,
         @InjectRepository(User)
         private readonly users: Repository<User>,
     ) { }
 
-    async userFishes(userId: number): Promise<UserFishOutput> {
+    async userCreatures(userId: number): Promise<UserCreatureOutput> {
         try {
             const user = await this.users.findOne({
                 where: {
                     id: userId
                 },
-                relations: ['fishes']
+                relations: ['creatures']
             });
 
-            return { ok: true, fishes: user.fishes };
+            return { ok: true, creatures: user.creatures };
         } catch (error) {
             return { ok: false, error };
         }
     }
 
-    async createFishRelation(userId: number, { name }: CreateFishInput): Promise<CreateFishOutput> {
+    async createCreatureRelation(userId: number, { name }: CreateCreatureInput): Promise<CreateCreatureOutput> {
         try {
             let user = await this.users.findOne({
                 where: {
                     id: userId
                 },
-                relations: ['fishes']
+                relations: ['creatures']
             });
-            let fish = await this.fishes.findOne({ where: { name } });
+            let creature = await this.creatures.findOne({ where: { name } });
 
-            if (!fish) {
-                fish = await this.fishes.save(this.fishes.create({ name }));
+            if (!creature) {
+                creature = await this.creatures.save(this.creatures.create({ name }));
             }
 
-            user.fishes.push(fish);
+            user.creatures.push(creature);
             await this.users.save(user);
 
             return { ok: true };
@@ -52,16 +52,16 @@ export class FishService {
         }
     }
 
-    async deleteFishRelation(userId: number, { name }: DeleteFishInput): Promise<DeleteFishOutput> {
+    async deleteCreatureRelation(userId: number, { name }: DeleteCreatureInput): Promise<DeleteCreatureOutput> {
         try {
             let user = await this.users.findOne({
                 where: {
                     id: userId
                 },
-                relations: ['fishes']
+                relations: ['Creatures']
             });
             
-            user.fishes = user.fishes.filter((fish) => fish.name !== name);
+            user.creatures = user.creatures.filter((creature) => creature.name !== name);
             await this.users.save(user);
 
             return { ok: true };

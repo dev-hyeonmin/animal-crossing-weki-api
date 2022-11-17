@@ -4,7 +4,7 @@ import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { CoreEntity } from "src/common/core.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, OneToMany, UpdateDateColumn } from "typeorm";
 import { VillagerComment } from "src/villagers/entities/villager-comment";
-import { Fish } from "src/fishes/entities/fish.entity";
+import { Creature } from "src/creatures/entities/creature.entity";
 
 @InputType("UserInputType", { isAbstract: true })
 @ObjectType() // 자동으로 스키마를 빌드하기 위한 GraphQL의 decorator
@@ -54,8 +54,8 @@ export class User extends CoreEntity {
     )
     comments?: VillagerComment[];
 
-    @Field(type => [Fish])
-    @ManyToMany(type => Fish)
+    @Field(type => [Creature])
+    @ManyToMany(type => Creature)
     @JoinTable()
-    fishes: Fish[];
+    creatures: Creature[];
 }

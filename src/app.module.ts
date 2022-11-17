@@ -18,8 +18,8 @@ import { UploadsModule } from './uploads/uploads.module';
 import { VillagersModule } from './villagers/villagers.module';
 import { Villager } from './villagers/entities/villager';
 import { VillagerComment } from './villagers/entities/villager-comment';
-import { FishesModule } from './fishes/fishes.module';
-import { Fish } from './fishes/entities/fish.entity';
+import { Creature } from './creatures/entities/creature.entity';
+import { CreaturesModule } from './creatures/creatures.module';
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ import { Fish } from './fishes/entities/fish.entity';
           database: process.env.DB_DATABASE,
         }),
       synchronize: true,
-      entities: [User, Verification, Villager, VillagerComment, Fish]
+      entities: [User, Verification, Villager, VillagerComment, Creature]
     }),
       GraphQLModule.forRoot<ApolloDriverConfig>({
         driver: ApolloDriver,
@@ -95,7 +95,7 @@ import { Fish } from './fishes/entities/fish.entity';
     AuthModule,
     UploadsModule,
     VillagersModule,
-    FishesModule,
+    CreaturesModule,
   ],
   controllers: [],
   providers: [],

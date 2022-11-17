@@ -35,7 +35,7 @@ type VillagerComment {
   user: User
 }
 
-type Fish {
+type Creature {
   name: String!
 }
 
@@ -48,7 +48,7 @@ type User {
   userImage: String
   verified: Boolean!
   lastLogin: DateTime!
-  fishes: [Fish!]!
+  creatures: [Creature!]!
 }
 
 type CreateAccountOutput {
@@ -103,18 +103,18 @@ type CreateVillagersOutput {
   ok: Boolean!
 }
 
-type UserFishOutput {
+type UserCreatureOutput {
   error: String
   ok: Boolean!
-  fishes: [Fish!]
+  creatures: [Creature!]
 }
 
-type CreateFishOutput {
+type CreateCreatureOutput {
   error: String
   ok: Boolean!
 }
 
-type DeleteFishOutput {
+type DeleteCreatureOutput {
   error: String
   ok: Boolean!
 }
@@ -124,7 +124,7 @@ type Query {
   villagers(input: VillagersInput!): VillagersOutput!
   villagersFilter: VillagersFilterOutput!
   villagersComments(input: VillagerCommentsInput!): VillagerCommentsOutput!
-  userFishes: UserFishOutput!
+  userCreatures: UserCreatureOutput!
 }
 
 input VillagersInput {
@@ -146,8 +146,8 @@ type Mutation {
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
   createVillagerComment(input: CreateVillagerCommentInput!): CreateVillagersOutput!
   deleteVillagerComment(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
-  createFishRelation(input: CreateFishInput!): CreateFishOutput!
-  deleteFishRelation(input: DeleteFishInput!): DeleteFishOutput!
+  createCreatureRelation(input: CreateCreatureInput!): CreateCreatureOutput!
+  deleteCreatureRelation(input: DeleteCreatureInput!): DeleteCreatureOutput!
 }
 
 input CreateAccountInput {
@@ -199,10 +199,10 @@ input DeleteVillagerCommentInput {
   id: Float!
 }
 
-input CreateFishInput {
+input CreateCreatureInput {
   name: String!
 }
 
-input DeleteFishInput {
+input DeleteCreatureInput {
   name: String!
 }
