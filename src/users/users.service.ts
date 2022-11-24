@@ -54,14 +54,14 @@ export class UserService {
         }
     }
 
-    async createAccount({name, email, password}: CreateAccountInput): Promise<CreateAccountOutput> {
+    async createAccount({name, email, password, islandName, islandCode}: CreateAccountInput): Promise<CreateAccountOutput> {
         try {
             const isExists = await this.users.findOneBy({ email });
             if (isExists) {
                 return {ok: false, error: "There is a user with that email already."}
             }
 
-            const user = await this.users.save(this.users.create({ name, email, password }));
+            const user = await this.users.save(this.users.create({ name, email, password,islandName, islandCode }));
             const verification = await this.verification.save(this.verification.create({ user }));
             
             this.mailService.send(email, verification.code);

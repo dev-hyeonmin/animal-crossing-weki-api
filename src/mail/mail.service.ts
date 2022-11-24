@@ -15,7 +15,7 @@ export class MailService {
             //to: this.options.fromMail,
             from: this.options.fromMail, // Change to your verified sender
             subject: '[mmm] Verfiy Email ;D',
-            html: `<h3>mmm._.mmm</h3><br>
+            html: `<h3>animal-crossing-weki</h3><br>
             <br>Thank you for using my app!<br>Please verify your email.<br><br><a href="${this.options.url}?code=${code}">verfiy email</a>`,
         };
 

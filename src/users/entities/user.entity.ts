@@ -26,6 +26,14 @@ export class User extends CoreEntity {
     @Field(type => String, {nullable: true})
     userImage?: string;
 
+    @Column({ nullable: true, comment: "섬이름" })
+    @Field(type => String, {nullable: true})
+    islandName?: string;
+
+    @Column({ nullable: true, comment: "꿈번지" })
+    @Field(type => String, {nullable: true})
+    islandCode?: string;
+
     @Column({ default: false })
     @Field(type => Boolean)
     verified: boolean;

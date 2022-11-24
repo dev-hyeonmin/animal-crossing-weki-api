@@ -46,6 +46,8 @@ type User {
   email: String!
   password: String!
   userImage: String
+  islandName: String
+  islandCode: String
   verified: Boolean!
   lastLogin: DateTime!
   creatures: [Creature!]!
@@ -154,6 +156,8 @@ input CreateAccountInput {
   name: String!
   email: String!
   password: String!
+  islandName: String
+  islandCode: String
 }
 
 input EditProfileInput {
