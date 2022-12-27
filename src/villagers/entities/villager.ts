@@ -13,6 +13,10 @@ export class Villager extends CoreEntity {
 
     @Column({ nullable: true })
     @Field(type => String, { nullable: true })
+    icon?: string;
+
+    @Column({ nullable: true })
+    @Field(type => String, { nullable: true })
     species?: string;
 
     @Column()

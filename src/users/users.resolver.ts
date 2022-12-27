@@ -6,6 +6,7 @@ import { CreateAccountInput, CreateAccountOutput } from "./dtos/create-account.d
 import { LoginInput, LoginOutput } from "./dtos/login.dto";
 import { EditProfileInput, EditProfileOutput } from "./dtos/user-edit.dto";
 import { VerifyEmailInput, VerifyEmailOutput } from "./dtos/verify-email.dto";
+import { MyFavoriteVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput } from "./dtos/villager.dto";
 import { User } from "./entities/user.entity";
 import { UserService } from "./users.service";
 
@@ -43,5 +44,23 @@ export class UsersResolver {
     @Mutation(returns => VerifyEmailOutput)
     async verifyEmail (@Args('input') { code }: VerifyEmailInput): Promise<VerifyEmailOutput> {
         return this.userService.verifyEmail(code);
+    }
+
+
+    @UseGuards(AuthGuard)
+    @Query(returns => MyFavoriteVillagerOutput)
+    async myFavoriteVillager(
+        @AuthUser() authUser: User
+    ): Promise<MyFavoriteVillagerOutput> {
+        return this.userService.myFavoriteVillager(authUser.id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Mutation(returns => RegistFavoriteVillagerOutput)
+    async registFavoriteVillager(
+        @AuthUser() authUser: User,
+        @Args('input') { villagerId }: RegistFavoriteVillagerInput
+    ): Promise<RegistFavoriteVillagerOutput> {
+        return this.userService.registFavoriteVillager(authUser.id, villagerId);
     }
 }

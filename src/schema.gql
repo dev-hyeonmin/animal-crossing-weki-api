@@ -6,6 +6,7 @@ type Villager {
   id: Float!
   createAt: DateTime!
   image: String
+  icon: String
   species: String
   name: String!
   personality: String
@@ -51,6 +52,7 @@ type User {
   verified: Boolean!
   lastLogin: DateTime!
   creatures: [Creature!]!
+  favorites: [Villager!]!
 }
 
 type CreateAccountOutput {
@@ -72,6 +74,17 @@ type EditProfileOutput {
 type VerifyEmailOutput {
   error: String
   ok: Boolean!
+}
+
+type RegistFavoriteVillagerOutput {
+  error: String
+  ok: Boolean!
+}
+
+type MyFavoriteVillagerOutput {
+  error: String
+  ok: Boolean!
+  favoriteVillagers: [Villager!]!
 }
 
 type VillagerCommentsOutput {
@@ -123,6 +136,7 @@ type DeleteCreatureOutput {
 
 type Query {
   me: User!
+  myFavoriteVillager: MyFavoriteVillagerOutput!
   villagers(input: VillagersInput!): VillagersOutput!
   villagersFilter: VillagersFilterOutput!
   villagersComments(input: VillagerCommentsInput!): VillagerCommentsOutput!
@@ -145,6 +159,7 @@ type Mutation {
   editProfile(input: EditProfileInput!): EditProfileOutput!
   login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
+  registFavoriteVillager(input: RegistFavoriteVillagerInput!): RegistFavoriteVillagerOutput!
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
   createVillagerComment(input: CreateVillagerCommentInput!): CreateVillagersOutput!
   deleteVillagerComment(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
@@ -176,8 +191,13 @@ input VerifyEmailInput {
   code: String!
 }
 
+input RegistFavoriteVillagerInput {
+  villagerId: Float!
+}
+
 input CreateVillagersInput {
   image: String
+  icon: String
   species: String
   name: String!
   personality: String

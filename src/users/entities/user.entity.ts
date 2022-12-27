@@ -5,6 +5,7 @@ import { CoreEntity } from "src/common/core.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, OneToMany, UpdateDateColumn } from "typeorm";
 import { VillagerComment } from "src/villagers/entities/villager-comment";
 import { Creature } from "src/creatures/entities/creature.entity";
+import { Villager } from "src/villagers/entities/villager";
 
 @InputType("UserInputType", { isAbstract: true })
 @ObjectType() // 자동으로 스키마를 빌드하기 위한 GraphQL의 decorator
@@ -13,7 +14,7 @@ export class User extends CoreEntity {
     @Column()
     @Field(type => String)
     name: string;
-        
+
     @Column({ unique: true })
     @Field(type => String)
     email: string;
@@ -23,15 +24,15 @@ export class User extends CoreEntity {
     password: string;
 
     @Column({ nullable: true })
-    @Field(type => String, {nullable: true})
+    @Field(type => String, { nullable: true })
     userImage?: string;
 
     @Column({ nullable: true, comment: "섬이름" })
-    @Field(type => String, {nullable: true})
+    @Field(type => String, { nullable: true })
     islandName?: string;
 
     @Column({ nullable: true, comment: "꿈번지" })
-    @Field(type => String, {nullable: true})
+    @Field(type => String, { nullable: true })
     islandCode?: string;
 
     @Column({ default: false })
@@ -66,4 +67,9 @@ export class User extends CoreEntity {
     @ManyToMany(type => Creature)
     @JoinTable()
     creatures: Creature[];
+
+    @Field(type => [Villager])
+    @ManyToMany(type => Villager)
+    @JoinTable()
+    favorites: Villager[];
 }

@@ -15,6 +15,8 @@ import { VerifyEmailOutput } from "./dtos/verify-email.dto";
 import { MailService } from "src/mail/mail.service";
 import { UploadsController } from "src/uploads/uploads.controller";
 import { UploadsService } from "src/uploads/uploads.service";
+import { Villager } from "src/villagers/entities/villager";
+import { MyFavoriteVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput } from "./dtos/villager.dto";
 
 @Injectable()
 export class UserService {
@@ -23,6 +25,8 @@ export class UserService {
         private readonly users: Repository<User>,
         @InjectRepository(Verification)
         private readonly verification: Repository<Verification>,
+        @InjectRepository(Villager)
+        private readonly villager: Repository<Villager>,
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly uploadsService: UploadsService
@@ -32,47 +36,47 @@ export class UserService {
         try {
             const user = await this.users.findOneOrFail({ where: { id } });
             if (!user) {
-                return {ok: false, error: "User Not Found."}
+                return { ok: false, error: "User Not Found." }
             }
 
-            return {ok: true, user};
+            return { ok: true, user };
         } catch (error) {
-            return {ok: false, error: "User Not Found."}
+            return { ok: false, error: "User Not Found." }
         }
     }
 
     async findByEmail(email: string): Promise<UserProfileOutput> {
         try {
-            const user = await this.users.findOneBy({email});
+            const user = await this.users.findOneBy({ email });
             if (!user) {
-                return {ok: false, error: "User Not Found."}
+                return { ok: false, error: "User Not Found." }
             }
 
-            return {ok: true, user};
+            return { ok: true, user };
         } catch (error) {
-            return {ok: false, error: "User Not Found."}
+            return { ok: false, error: "User Not Found." }
         }
     }
 
-    async createAccount({name, email, password, islandName, islandCode}: CreateAccountInput): Promise<CreateAccountOutput> {
+    async createAccount({ name, email, password, islandName, islandCode }: CreateAccountInput): Promise<CreateAccountOutput> {
         try {
             const isExists = await this.users.findOneBy({ email });
             if (isExists) {
-                return {ok: false, error: "There is a user with that email already."}
+                return { ok: false, error: "There is a user with that email already." }
             }
 
-            const user = await this.users.save(this.users.create({ name, email, password,islandName, islandCode }));
+            const user = await this.users.save(this.users.create({ name, email, password, islandName, islandCode }));
             const verification = await this.verification.save(this.verification.create({ user }));
-            
+
             this.mailService.send(email, verification.code);
-            
+
             return { ok: true };
         } catch (error) {
             return { ok: false, error };
         }
     }
 
-    async editProfile(id: number, {name, email, password, userImage}: EditProfileInput):Promise<EditProfileOutput> {
+    async editProfile(id: number, { name, email, password, userImage }: EditProfileInput): Promise<EditProfileOutput> {
         try {
             const user = await this.users.findOneBy({ id });
             if (!user) {
@@ -109,7 +113,7 @@ export class UserService {
     }
 
     async login({ email, password }: LoginInput): Promise<LoginOutput> {
-        try {            
+        try {
             const user = await this.users.findOne({ where: { email }, select: ['id', 'password'] });
             if (!user) {
                 return { ok: false, error: "User not found." };
@@ -130,8 +134,8 @@ export class UserService {
 
     async verifyEmail(code: string): Promise<VerifyEmailOutput> {
         try {
-            const verification = await this.verification.findOne({ where: {code}, relations: ['user'] });
-            
+            const verification = await this.verification.findOne({ where: { code }, relations: ['user'] });
+
             if (verification) {
                 this.users.save({
                     id: verification.user.id,
@@ -147,7 +151,47 @@ export class UserService {
             };
         } catch (error) {
             return { ok: false, error };
-        }        
+        }
+    }
+
+    // Villager
+    async myFavoriteVillager(userId: number): Promise<MyFavoriteVillagerOutput> {
+        try {            
+            const user = await this.users.findOne({ where: { id: userId }, relations: ['favorites'] });
+            const favorites = user.favorites;
+
+            return {
+                ok: true,
+                favoriteVillagers: favorites
+            };
+        } catch (error) {
+            return { ok: false, error };
+        }   
+    }
+
+    async registFavoriteVillager(userId: number, villagerId: number): Promise<RegistFavoriteVillagerOutput> {
+        try {            
+            const user = await this.users.findOne({ where: { id: userId }, relations: ['favorites'] });
+            const favorites = user.favorites;
+            
+            if (favorites.filter((favor => favor.id == villagerId)).length === 0) {
+                // regist
+                const villager = await this.villager.findOne({ where: { id: villagerId } });
+                user.favorites = [...favorites, villager];
+                
+                await this.users.save(user);
+            } else {
+                // delete
+                user.favorites = favorites.filter((favor => favor.id != villagerId));
+                await this.users.save(user);
+            }
+
+            return {
+                ok: true,
+            };
+        } catch (error) {
+            return { ok: false, error };
+        }   
     }
 
     private getNow(): string {
@@ -162,6 +206,6 @@ export class UserService {
         let minutes = today.getMinutes();
         let seconds = today.getSeconds();
 
-        return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}.00`;*/        
+        return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}.00`;*/
     }
 }

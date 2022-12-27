@@ -35,6 +35,7 @@ export class VillagersFilterOutput extends CoreOutput{
 @InputType()
 export class CreateVillagersInput extends PickType(Villager, [
     'image',
+    'icon',
     'species',
     'name',
     'personality',

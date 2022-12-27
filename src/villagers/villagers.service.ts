@@ -80,9 +80,10 @@ export class VillagersService {
     async createVillagers(villagerInput: CreateVillagersInput):Promise<CreateVillagersOutput> {
         try {
             const findedVillager = await this.villager.findOne({ where: { name: villagerInput.name } });
-            if (findedVillager) { return; }
+            if (!findedVillager) { return; }
 
-            await this.villager.save(this.villager.create(villagerInput));
+            // await this.villager.save(this.villager.create(villagerInput));
+            await this.villager.update(findedVillager.id, { icon: villagerInput.icon });
 
             return { ok: true };
         } catch (error) {
