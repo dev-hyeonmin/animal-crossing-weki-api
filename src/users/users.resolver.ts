@@ -6,7 +6,7 @@ import { CreateAccountInput, CreateAccountOutput } from "./dtos/create-account.d
 import { LoginInput, LoginOutput } from "./dtos/login.dto";
 import { EditProfileInput, EditProfileOutput } from "./dtos/user-edit.dto";
 import { VerifyEmailInput, VerifyEmailOutput } from "./dtos/verify-email.dto";
-import { MyFavoriteVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput } from "./dtos/villager.dto";
+import { MyFavoriteVillagerOutput, MyVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput, RegistMyVillagerInput, RegistMyVillagerOutput } from "./dtos/villager.dto";
 import { User } from "./entities/user.entity";
 import { UserService } from "./users.service";
 
@@ -46,7 +46,6 @@ export class UsersResolver {
         return this.userService.verifyEmail(code);
     }
 
-
     @UseGuards(AuthGuard)
     @Query(returns => MyFavoriteVillagerOutput)
     async myFavoriteVillager(
@@ -62,5 +61,22 @@ export class UsersResolver {
         @Args('input') { villagerId }: RegistFavoriteVillagerInput
     ): Promise<RegistFavoriteVillagerOutput> {
         return this.userService.registFavoriteVillager(authUser.id, villagerId);
+    }
+
+    @UseGuards(AuthGuard)
+    @Query(returns => MyVillagerOutput)
+    async myVillager(
+        @AuthUser() authUser: User
+    ): Promise<MyVillagerOutput> {
+        return this.userService.myVillager(authUser.id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Mutation(returns => RegistMyVillagerOutput)
+    async registMyVillager(
+        @AuthUser() authUser: User,
+        @Args('input') { villagerId }: RegistMyVillagerInput
+    ): Promise<RegistMyVillagerOutput> {
+        return this.userService.registMyVillager(authUser.id, villagerId);
     }
 }

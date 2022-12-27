@@ -53,6 +53,7 @@ type User {
   lastLogin: DateTime!
   creatures: [Creature!]!
   favorites: [Villager!]!
+  myVillagers: [Villager!]!
 }
 
 type CreateAccountOutput {
@@ -85,6 +86,17 @@ type MyFavoriteVillagerOutput {
   error: String
   ok: Boolean!
   favoriteVillagers: [Villager!]!
+}
+
+type RegistMyVillagerOutput {
+  error: String
+  ok: Boolean!
+}
+
+type MyVillagerOutput {
+  error: String
+  ok: Boolean!
+  myVillagers: [Villager!]!
 }
 
 type VillagerCommentsOutput {
@@ -137,6 +149,7 @@ type DeleteCreatureOutput {
 type Query {
   me: User!
   myFavoriteVillager: MyFavoriteVillagerOutput!
+  myVillager: MyVillagerOutput!
   villagers(input: VillagersInput!): VillagersOutput!
   villagersFilter: VillagersFilterOutput!
   villagersComments(input: VillagerCommentsInput!): VillagerCommentsOutput!
@@ -160,6 +173,7 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
   registFavoriteVillager(input: RegistFavoriteVillagerInput!): RegistFavoriteVillagerOutput!
+  registMyVillager(input: RegistMyVillagerInput!): RegistMyVillagerOutput!
   createVillagers(input: CreateVillagersInput!): CreateVillagersOutput!
   createVillagerComment(input: CreateVillagerCommentInput!): CreateVillagersOutput!
   deleteVillagerComment(input: DeleteVillagerCommentInput!): DeleteVillagerCommentOutput!
@@ -192,6 +206,10 @@ input VerifyEmailInput {
 }
 
 input RegistFavoriteVillagerInput {
+  villagerId: Float!
+}
+
+input RegistMyVillagerInput {
   villagerId: Float!
 }
 

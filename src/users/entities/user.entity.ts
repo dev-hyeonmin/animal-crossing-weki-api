@@ -72,4 +72,9 @@ export class User extends CoreEntity {
     @ManyToMany(type => Villager)
     @JoinTable()
     favorites: Villager[];
+
+    @Field(type => [Villager])
+    @ManyToMany(type => Villager)
+    @JoinTable({name: "user_my_villager"})
+    myVillagers: Villager[];
 }

@@ -16,7 +16,7 @@ import { MailService } from "src/mail/mail.service";
 import { UploadsController } from "src/uploads/uploads.controller";
 import { UploadsService } from "src/uploads/uploads.service";
 import { Villager } from "src/villagers/entities/villager";
-import { MyFavoriteVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput } from "./dtos/villager.dto";
+import { MyFavoriteVillagerOutput, MyVillagerOutput, RegistFavoriteVillagerInput, RegistFavoriteVillagerOutput, RegistMyVillagerOutput } from "./dtos/villager.dto";
 
 @Injectable()
 export class UserService {
@@ -183,6 +183,45 @@ export class UserService {
             } else {
                 // delete
                 user.favorites = favorites.filter((favor => favor.id != villagerId));
+                await this.users.save(user);
+            }
+
+            return {
+                ok: true,
+            };
+        } catch (error) {
+            return { ok: false, error };
+        }   
+    }
+
+    async myVillager(userId: number): Promise<MyVillagerOutput> {
+        try {            
+            const user = await this.users.findOne({ where: { id: userId }, relations: ['myVillagers'] });
+            const myVillagers = user.myVillagers;
+
+            return {
+                ok: true,
+                myVillagers
+            };
+        } catch (error) {
+            return { ok: false, error };
+        }   
+    }
+
+    async registMyVillager(userId: number, villagerId: number): Promise<RegistMyVillagerOutput> {
+        try {            
+            const user = await this.users.findOne({ where: { id: userId }, relations: ['myVillagers'] });
+            const myVillagers = user.myVillagers;
+            
+            if (myVillagers.filter((favor => favor.id == villagerId)).length === 0) {
+                // regist
+                const villager = await this.villager.findOne({ where: { id: villagerId } });
+                user.myVillagers = [...myVillagers, villager];
+                
+                await this.users.save(user);
+            } else {
+                // delete
+                user.myVillagers = myVillagers.filter((favor => favor.id != villagerId));
                 await this.users.save(user);
             }
 
